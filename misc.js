@@ -11,11 +11,16 @@ function ping(options, callback) {
         });
 
         res.on("end", () => {
-            callback(JSON.parse(output), undefined);
+            try {
+                callback(JSON.parse(output), undefined);
+            } catch (error) {
+                callback(undefined, error);
+            }
+            
         });
     })
         .on("error", error => {
-            onError(undefined, error);
+            callback(undefined, error);
         })
         .end();
 }
@@ -25,11 +30,12 @@ function pingAll(port) {
         var found = [];
         var done = 0;
         for (i = 0; i < 256; i++) {
-            myIP = IP.address().split(".");
+            myIP = ip.address().split(".");
             pingIP = myIP[0] + "." + myIP[1] + "." + myIP[2] + "." + i;
             ping({ hostname: pingIP, port: port, path: "/", method: "GET" }, (out, err) => {
                 done++;
-                if (err == undefined) found.push(pingIP);
+                console.log(done);
+                if (!err) found.push(pingIP);
                 if (done >= 256) res(found);
             });
         }
