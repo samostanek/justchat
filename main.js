@@ -10,7 +10,7 @@ const rl = readline.createInterface({
 });
 
 rl.on('line', input => {
-    if (input.split(' ')[0] == 'ping') pingAll(input.split(' ')[1]);
+    if (input.split(' ')[0] == 'ping') pingAll(input.split(' ')[1]).then(ips => console.log("Found IPs: " + ips));
 });
 
 app.set('view engine', 'ejs');
